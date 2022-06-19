@@ -36,6 +36,30 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   app.get( "/", async ( req, res ) => {
     res.send("try GET /filteredimage?image_url={{}}")
   } );
+  app.get( "/filteredimage", async ( req, res ) => {
+   let image_url=req.query.image_url;
+   console.log(image_url);
+   if (!image_url)
+   {
+  return   res.status(400)
+        .send('image url is required' );
+   } 
+
+   let imagePath = await filterImageFromURL(image_url) ;
+   console.log(imagePath);
+ return  res.sendFile(imagePath, function (err) {
+    if (err) {
+      return   res.status(500)
+      .send('The server encountered an unexpected condition that prevented it from fulfilling the request' );
+       
+      
+    } else {
+      deleteLocalFiles([imagePath]);
+      
+    }
+});
+
+  } );
   
 
   // Start the Server
