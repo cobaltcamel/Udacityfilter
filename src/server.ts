@@ -1,4 +1,5 @@
-import express from 'express';
+
+import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
@@ -33,10 +34,11 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   
   // Root Endpoint
   // Displays a simple message to the user
-  app.get( "/", async ( req, res ) => {
+  
+  app.get( "/", async ( req :Request, res: Response ) => {
     res.send("try GET /filteredimage?image_url={{}}")
   } );
-  app.get( "/filteredimage", async ( req, res ) => {
+  app.get( "/filteredimage", async ( req :Request, res:Response ) => {
    let image_url=req.query.image_url;
    console.log(image_url);
    if (!image_url)
@@ -47,7 +49,7 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
    let imagePath = await filterImageFromURL(image_url) ;
    console.log(imagePath);
- return  res.sendFile(imagePath, function (err) {
+ return  res.status(200).sendFile(imagePath, function (err) {
     if (err) {
       return   res.status(500)
       .send('The server encountered an unexpected condition that prevented it from fulfilling the request' );
